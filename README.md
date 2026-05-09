@@ -1,3 +1,12 @@
 # Low-Code Development Platform
 
 Titanoboa makes complex workflows easy. It is a low-code workflow orchestration platform for JVM - distributed, highly scalable and fault tolerant. re-frame is a ClojureScript framework for building user interfaces. Reagent provides a way to write efficient React components using (almost) nothing but plain ClojureScript functions. Supabase is the Postgres development platform. OpenXava generates a fully functional web application from JPA entities. Reusable workflows used by GeneXus components. GeneXus Standard Classes for Java and Android generators. GeneXus Standard Classes for .NET and .NET Core generators. GeneXus standard functions written in TypeScript. GeneXus Web Controls Library. OpenUI5 is a JavaScript UI Framework. Frappe DataTable is a simple, modern and interactive datatable library for displaying tabular data. Frappe Framework is a low code web framework for real world applications. Shesha is an open-source Low-Code development framework specifically for .NET developers. Lowdefy is an open-source (Apache-2.0) low-code framework that lets you build web apps with YAML or JSON configuration files. Freetool is a free, open-source alternative to Retool for building internal tools and dashboards. ToolJet is the open-source foundation of ToolJet AI - the AI-native platform for building and deploying internal tools, workflows and AI agents. Appsmith is an open-source low-code platform that streamlines custom application development, deployment, and maintenance. ILLA is a robust open source low-code platform for developers to build internal tools. Budibase is an open-source low-code platform designed to help users build internal tools, workflows, and applications quickly and efficiently. Erupt is a low-code, full-stack class framework. Obsei is a low code AI powered automation tool. It can be used in various business flows like social listening, AI based alerting, brand image analysis, comparative study and more. 
+
+The directory structure includes a specific folder for each phase of development and engineering programs:
+
+- __MBSE__: The root folder Arcadia (ARChitecture Analysis and Design Integrated Approach) is a method of tools dedicated to systems engineering and architecture, supported by the Capella modeling tool.    
+  - __CAD__: For computer-aided design.
+  - __CAM__: Dedicated to the part manufacturing and assembly process.
+  - __CAS__: For simulation of end-to-end functionality and performance analysis.
+
+
