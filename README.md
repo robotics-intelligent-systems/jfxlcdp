@@ -4,6 +4,8 @@ Multi-Purpose Vessel (MPV) specifications. DA42 – Preliminary & Detail Design.
 
 Spec-Driven Development flips the script on traditional software development. For decades, code has been king — specifications were just scaffolding we built and discarded once the "real work" of coding began. Spec-Driven Development changes this: specifications become executable, directly generating working implementations rather than just guiding them.
 
+The central idea is that the LLM does not replace the physical solver: the LLM proposes models, parameters, experiments, and diagnostics; RuMoCo/SciML/Kokkos execute and validate the mathematics, while Ada SPARK controls the functions that require high integrity, and O3DE/Godot presents the state of the digital twin.
+
 The directory structure includes a specific folder for each phase of development and engineering programs:
 
 - __MBSE__: The root folder Arcadia (ARChitecture Analysis and Design Integrated Approach) is a method of tools dedicated to systems engineering and architecture, supported by the Capella modeling tool.    
