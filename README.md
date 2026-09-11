@@ -1,10 +1,10 @@
 # JFXLCDP — Spec-Driven Low-Code Development Platform
 
-[![GitHub](https://img.shields.io/badge/GitHub-open--source-blue)](https://github.com/robotics-intelligent-systems/jfxlcdp)
+[![GitHub](https://img.shields.io/badge/GitHub-project-blue)](https://github.com/robotics-intelligent-systems/jfxlcdp)
 [![Architecture](https://img.shields.io/badge/Architecture-MBSE%20%7C%20SDD-orange)](https://github.com/robotics-intelligent-systems/jfxlcdp/tree/main/MBSE/CAS/Drawio)
 [![AI](https://img.shields.io/badge/AI-Engineering%20AI-purple)](https://github.com/robotics-intelligent-systems/jfxlcdp)
 [![Modeling](https://img.shields.io/badge/Modeling-Modelica%20%7C%20SysML-green)](https://github.com/robotics-intelligent-systems/jfxlcdp)
-[![License](https://img.shields.io/badge/License-Open%20Source-lightgrey)](LICENSE)
+[![License](https://img.shields.io/badge/License-Not%20yet%20declared-lightgrey)](#license)
 
 > **Spec-Driven Low-Code Development Platform for AI-assisted software engineering, MBSE, simulation, scientific computing, digital twins and engineering code generation.**
 
@@ -20,6 +20,8 @@
 - [Architecture](#architecture)
 - [Spec-Driven Development](#spec-driven-development)
 - [AI-Assisted Engineering](#ai-assisted-engineering)
+- [Open-Source AI Integration Proposal](#open-source-ai-integration-proposal)
+- [AI Agent Architecture](#ai-agent-architecture)
 - [MBSE Integration](#mbse-integration)
 - [Low-Code Development](#low-code-development)
 - [Modeling and Simulation](#modeling-and-simulation)
@@ -47,7 +49,7 @@
 
 # Description and Context
 
-JFXLCDP is an open-source research and engineering platform focused on **Specification-Driven Development (SDD)** and **Low-Code Development**.
+JFXLCDP is a research and engineering project focused on **Specification-Driven Development (SDD)** and **Low-Code Development**, with an open-source target architecture.
 
 The project explores how natural-language and formal engineering specifications can become executable artifacts through a combination of:
 
@@ -67,9 +69,15 @@ The project explores how natural-language and formal engineering specifications 
 - Distributed engineering workflows
 - Multi-domain system modeling
 
-The current repository contains an extensive technology ecosystem covering MBSE, aerospace engineering, Modelica, AI-assisted development, knowledge bases, simulation, formal specifications, rule engines and engineering software generation.
+The current repository documents an extensive technology ecosystem covering MBSE, aerospace engineering, Modelica, AI-assisted development, knowledge bases, simulation, formal specifications, rule engines and engineering software generation.
 
-The repository currently identifies itself as a **Spec-Driven Low-Code Development Platform** and includes an `MBSE/CAS/Drawio` engineering architecture area. 
+The proposed AI integration turns this ecosystem into an **engineering copilot** that helps engineers formalize requirements, retrieve approved project knowledge, generate reviewable Modelica and application changes, run controlled simulations, and assemble verification evidence. The reference path combines **LangGraph, MCP, locally served models, Qdrant, PostgreSQL and OpenModelica** through replaceable adapters.
+
+The central engineering asset is a versioned chain of evidence: **requirement, specification, model revision, simulation configuration, result and review decision**. Generated forms, APIs and simulation dashboards should derive from the same reviewed specification. This connects the low-code interface to MBSE and scientific computing while keeping mathematical checks in executable validators.
+
+**Current status:** the repository contains this README and engineering diagrams under `MBSE/CAS/Drawio`. The AI services, tool contracts, deployment profiles and acceptance criteria below are **proposed work**, with no integrated runtime or benchmark results established here. The repository does not yet contain a license file; the [license section](#license) describes that outstanding project decision.
+
+The expanded proposal develops the existing [Modex AI / Modelica multidomain architecture](MBSE/CAS/Drawio/modex_ai_modelica_open_source_multidomain.drawio), preserving its MBSE, specification, simulation and local AI direction.
 
 ---
 
@@ -309,66 +317,237 @@ Deployment
 
 # AI-Assisted Engineering
 
-AI is positioned as an engineering assistant rather than a replacement for deterministic engineering solvers.
+AI should help engineers interpret specifications, find relevant evidence, propose artifacts and explain diagnostics. Executable validators establish whether a proposal satisfies its declared contracts. A successful compilation establishes structural feasibility; physical validity requires appropriate equations, assumptions, boundary conditions and comparison with reference behavior.
 
-A core design principle is:
+# Open-Source AI Integration Proposal
 
-```text
-LLM
- │
- ├── proposes models
- ├── proposes parameters
- ├── proposes experiments
- ├── generates specifications
- ├── generates code
- └── diagnoses results
-          │
-          ▼
-Deterministic Engineering Solvers
- │
- ├── Numerical Simulation
- ├── Physics
- ├── Modelica
- ├── Scientific Computing
- └── Verification
-          │
-          ▼
-Validated Engineering Result
+## Purpose and Design Decisions
+
+Build a self-hosted, modular engineering copilot around the existing specification and Modelica architecture. Its first useful outcome is a reproducible requirement-to-simulation workflow with a reviewable change and an evidence report.
+
+| Decision | Proposed approach | Engineering benefit |
+|---|---|---|
+| Specification as the source of intent | Version requirements, units, constraints and acceptance criteria before generation | Make outputs testable and changes traceable |
+| Local inference as the reference path | Run selected model weights on controlled infrastructure; keep provider access behind an adapter | Allow deployment without a mandatory hosted model subscription |
+| Explicit workflow orchestration | Use a bounded LangGraph graph with persistent state and review points | Make progress, retries and failures inspectable |
+| Typed engineering tools | Expose narrowly scoped operations through MCP and application APIs | Reuse the same services from agents, the UI and automated checks |
+| Evidence-backed retrieval | Retrieve approved, versioned knowledge and attach citations | Make engineering explanations auditable |
+| Solver-based verification | Use OpenModelica and independent numerical assertions | Check generated models against measurable requirements |
+| Portable artifacts | Store specifications, source models, contracts and results in documented formats | Keep the project usable across editors, model providers and execution environments |
+
+These are JFXLCDP architecture recommendations. The upstream projects linked below provide building blocks; an upstream feature does not establish a working JFXLCDP integration.
+
+## Capabilities and Deliverables
+
+| Capability | Input | Proposed output | Acceptance boundary |
+|---|---|---|---|
+| Requirements assistant | Natural-language requirement and approved domain vocabulary | Structured requirement, assumptions, unresolved questions and acceptance criteria | Missing units or limits remain unresolved until supplied |
+| Engineering knowledge assistant | Question and authorized project revision | Answer with source path, revision and passage references | Abstain when supporting evidence is missing |
+| Modelica assistant | Reviewed specification and approved library catalog | Model patch, interface map and simulation plan | Validate syntax, interfaces, units and numerical behavior |
+| Simulation assistant | Model revision and bounded experiment definition | Job identifier, diagnostics, result series and assertion report | Success comes from worker results and validators |
+| Low-code application assistant | Reviewed schema and simulation API contract | Generated parameter forms, API schemas, dashboards and tests | Generated artifacts agree with the specification and API |
+| MBSE traceability assistant | Requirement identifiers and imported model elements | Links from requirements to architecture, models and test evidence | Preserve source identifiers; require review of semantic mappings |
+| Change and repair assistant | Failing checks and current artifact revision | Minimal candidate patch with reasons and a new validation run | Bounded repair attempts; retain the previous evidence |
+
+For the first MVP, these capabilities can be graph nodes in one application. Separate agents, services or models should be introduced when a measured workload or ownership boundary justifies them.
+
+## Reference Components
+
+All entries are candidates for implementation. Choose one implementation per responsibility in the MVP.
+
+| Responsibility | Reference component | Initial use or substitution boundary |
+|---|---|---|
+| Application API | [FastAPI](https://github.com/fastapi/fastapi) | Validate requests, enforce project access, serve workflow status and expose reviewed contracts |
+| Workflow state | [LangGraph](https://github.com/langchain-ai/langgraph) | Coordinate retrieval, generation, validation, repair and review; persist checkpoints |
+| Local model serving | [Ollama](https://github.com/ollama/ollama) | Initial workstation runtime; explicitly select local models |
+| Shared model serving | [vLLM](https://github.com/vllm-project/vllm) | Alternative inference service when concurrent workloads justify it |
+| Engineering tool protocol | [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk) | Implement JFXLCDP tool adapters with schema-validated arguments |
+| Vector retrieval | [Qdrant](https://github.com/qdrant/qdrant) | Index engineering passages with project, revision and access metadata |
+| Durable records | [PostgreSQL](https://www.postgresql.org/) | Specifications, traceability edges, checkpoints, job records and review decisions |
+| Modelica execution | [OpenModelica through OMPython](https://openmodelica.org/doc/OpenModelicaUsersGuide/latest/ompython.html) | Isolated model checking, compilation and simulation workers |
+| FMU execution | [FMPy](https://fmpy.readthedocs.io/en/latest/) | Optional FMI adapter after native Modelica execution is accepted |
+| Team identity | [Keycloak](https://www.keycloak.org/documentation) | Optional OIDC provider for a shared deployment |
+| Telemetry | [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) | Instrument model calls, retrieval, tool operations and worker execution |
+
+Use a filesystem volume for initial result artifacts, with identifiers and checksums stored in PostgreSQL. Introduce an object-store adapter when deployment needs justify it. Qdrant is a derived search index; source documents and durable engineering records remain independently recoverable.
+
+The proposed model adapter should expose generation and embedding capabilities with explicit capability checks. [Ollama documents partial OpenAI API compatibility](https://docs.ollama.com/api/openai-compatibility), and [vLLM provides an API server](https://github.com/vllm-project/vllm). Shared endpoint conventions do not guarantee identical structured-output, tool-call, streaming or context behavior. Test the exact server/model combination before enabling a capability; schema validation remains an application responsibility.
+
+## Model Selection and License Boundaries
+
+Start with a small, reproducible model evaluation instead of selecting by a general leaderboard. Two concrete candidates are:
+
+| Task | Candidate checkpoint | Published model-card license | Required JFXLCDP evaluation |
+|---|---|---|---|
+| Specification and code drafting | [Qwen/Qwen2.5-Coder-7B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct) | Apache-2.0 | Structured specifications, Modelica syntax, repair behavior and unsupported-assumption handling |
+| Engineering text embeddings | [Qwen/Qwen3-Embedding-0.6B](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B) | Apache-2.0 | Retrieval of requirements, library symbols and English/Spanish engineering passages |
+
+These are evaluation candidates, not claims of Modelica specialization or preferred models for every workload. Pin the checkpoint revision, tokenizer, quantization and serving configuration. Fit memory and context settings to measured RAM/VRAM use, latency and concurrent requests. Add a larger model only when the same evaluation shows a useful improvement.
+
+Keep three inventories: **application software**, **model weights/tokenizers**, and **engineering data/libraries**. Their licenses and provenance are separate. Current upstream software licenses include [MIT for LangGraph](https://github.com/langchain-ai/langgraph/blob/main/LICENSE), [MIT for Ollama](https://github.com/ollama/ollama/blob/main/LICENSE), [Apache-2.0 for vLLM](https://github.com/vllm-project/vllm/blob/main/LICENSE), [Apache-2.0 for Qdrant](https://github.com/qdrant/qdrant/blob/master/LICENSE), [MIT for FastAPI](https://github.com/fastapi/fastapi/blob/master/LICENSE), [MIT for the MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk/blob/main/LICENSE), and the [PostgreSQL License](https://www.postgresql.org/about/licence/).
+
+[OMPython uses the OSMC Public Runtime License](https://github.com/OpenModelica/OMPython); inspect the selected OpenModelica distribution, libraries and generated-runtime components individually. An open-source inference server does not determine the license or openness of the model it loads. Record the terms of each exact dependency before packaging a distribution. The JFXLCDP project license is still an outstanding decision.
+
+## Engineering Knowledge and RAG
+
+The first corpus should contain approved project specifications, architecture decisions, model documentation, reviewed examples, compiler diagnostics and permitted Modelica library documentation.
+
+1. **Ingest by revision.** Record repository, path, commit or document revision, owner and permitted access scope. Parse Draw.io XML labels and relationships as architecture context while preserving element identifiers.
+2. **Chunk by engineering structure.** Preserve requirement IDs, Modelica class names, interfaces, units and adjacent assumptions. Keep equations with the text that defines their symbols.
+3. **Embed locally.** Record the embedding model revision, vector dimensions and preprocessing configuration. A model change requires an explicitly versioned index rebuild.
+4. **Filter before generation.** Derive project and access filters from the authenticated application context. Apply them to every search and source fetch; never accept the model's own claim of authorization.
+5. **Retrieve and cite.** Combine semantic retrieval with exact identifier lookup. Return a bounded set of passages with stable source references; evaluate hybrid retrieval or reranking only if a measured retrieval gap warrants it.
+6. **Handle missing evidence.** Return an unresolved requirement or an explicit lack of supporting material. Keep proposed assumptions separate from facts extracted from sources.
+7. **Maintain the index.** Propagate deletions and access changes; invalidate outdated revisions and keep index snapshots tied to corpus versions.
+
+[Qdrant supports conditions on payload fields and point IDs](https://qdrant.tech/documentation/search/filtering/). Project isolation is an application design requirement built around that capability, not something a vector similarity score establishes. Apply the same access scope to caches, logs and artifact downloads.
+
+Retrieved documents, diagrams and tool output are data inputs. Instructions embedded in them must not alter the workflow's tool permissions or its validation rules.
+
+## Engineering Tool Contracts
+
+MCP supplies [tools, resources and prompts](https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture). JFXLCDP must implement the engineering meaning, authorization and validation of each adapter. Pin mutually supported protocol and SDK versions, and test client/server compatibility.
+
+The following names are **proposed JFXLCDP contracts**, not existing commands or endpoints:
+
+| Tool | Required input | Structured result | Boundary |
+|---|---|---|---|
+| `knowledge_search` | Query and authorized corpus revision | Source references, passages and retrieval metadata | Read access enforced by application identity |
+| `spec_validate` | Candidate specification and schema revision | Schema errors, missing units, contradictions and unresolved assumptions | No silent default for engineering constraints |
+| `modelica_check` | Immutable model artifact and library-lock revision | Compiler diagnostics, check status and toolchain version | Isolated workspace and approved dependencies |
+| `simulation_submit` | Model revision, experiment, budget and idempotency key | Job ID and initial status | Bounded worker execution; no caller-supplied shell |
+| `simulation_result` | Authorized job ID | State, result artifact references, checksums and logs | Failed or timed-out jobs cannot return a successful result |
+| `requirements_verify` | Approved requirement revision and result artifacts | Per-requirement pass/fail evidence and missing coverage | Independent assertions compute the outcome |
+| `change_prepare` | Candidate patch and validated base revision | Review bundle with diff, evidence and traceability | Publishing and release follow the project's review workflow |
+
+Every run should record `project_id`, `run_id`, `requirement_ids`, input revisions, tool versions and output artifact checksums. Mutation-like operations need stable idempotency keys. Long simulations should use an application-owned job lifecycle such as `queued`, `running`, `succeeded`, `failed`, `cancelled` and `timed_out`; client polling and resumption must work across restarts.
+
+Credentials and access identity come from the application, not model-generated tool arguments. Validate paths and class names against the job workspace and library catalog. Reject arbitrary compiler scripting, network destinations and unapproved external functions. Compilation and FMU execution both require process isolation because model packages can contain executable code.
+
+## Modelica, MBSE and Scientific Computing
+
+**OpenModelica is the reference execution backend**, consistent with the existing multidomain diagram. OMPython provides a Python interface to an installed OpenModelica environment; installing the Python package alone does not provide the compiler. Use adapters for model loading, checking, simulation and diagnostic collection. Keep the exact compiler, library versions, solver, tolerances, initial conditions and platform in each run manifest. See the [OpenModelica Python interface](https://openmodelica.org/doc/OpenModelicaUsersGuide/latest/ompython.html).
+
+Keep the original Capella/Arcadia and SysON/SysML artifacts authoritative for their respective modeling views. Begin with explicit, reviewed mappings from requirement and model-element identifiers to Modelica classes, connectors and parameters. Draw.io diagrams are architectural references, and cannot substitute for a formally defined executable model. General SysML-to-Modelica conversion remains research work until transformation semantics and round-trip tests exist.
+
+Use the [Functional Mock-up Interface](https://fmi-standard.org/) as an optional exchange boundary. The first FMU experiment should pin one tested FMI version, execution mode and target platform; **FMI 2.0 Co-Simulation with FMPy** is a candidate baseline. FMI 3.x, Model Exchange and SSP orchestration need their own compatibility checks. Do not infer exporter/importer compatibility from a shared format label.
+
+SciML integration can follow a validated Modelica baseline for parameter estimation, sensitivity analysis or surrogate-model experiments. A Julia adapter must specify units, parameter order, input time grids and output semantics. Differentiation through an arbitrary FMU or external solver is not an assumed capability. Compare a surrogate against independent solver cases and record its valid operating domain.
+
+Kokkos, Drake, Ada/SPARK, O3DE and Godot remain specialized extensions from the wider ecosystem. They do not enter the minimal AI runtime merely because they appear in the compendium. Physical actuation and digital-twin control require their own reviewed integration.
+
+## First MVP: Thermal Requirement to Verified Simulation
+
+Use a small thermal resistance-capacitance model as the first end-to-end benchmark. This makes model generation, unit handling and simulation verifiable against an analytical solution.
+
+**Illustrative requirement:** starting at 353.15 K with an ambient temperature of 293.15 K, the passive subsystem shall be within 5 K of ambient after 600 seconds, with positive thermal resistance and heat capacity.
+
+The following is an example specification to implement, not an existing executable project configuration:
+
+```yaml
+schema_version: "0.1"
+requirement_id: "THERM-001"
+model_class: "JFXLCDP.Examples.ThermalRC"
+parameters:
+  initial_temperature: {value: 353.15, unit: "K"}
+  ambient_temperature: {value: 293.15, unit: "K"}
+  thermal_resistance: {value: 2.0, unit: "K/W"}
+  heat_capacity: {value: 100.0, unit: "J/K"}
+experiment:
+  start_time_s: 0
+  stop_time_s: 600
+  output_interval_s: 1
+  relative_tolerance: 0.000001
+acceptance:
+  final_temperature_offset_max_K: 5.0
+  analytical_temperature_error_max_K: 0.05
 ```
 
-This separation helps prevent the language model from being treated as the authoritative source of physical or mathematical truth.
+For this declared model, the reference equation is:
+
+```math
+T(t) = T_{ambient} + (T_{initial} - T_{ambient})
+       \exp\left(-\frac{t}{R_{th} C_{th}}\right)
+```
+
+The implementation should deliver a reviewed requirement record, a Modelica source patch, compiler diagnostics, a simulation manifest, CSV results, a traceability record and a verification report. The low-code interface should generate unit-aware parameter forms and a results view from the same schema.
+
+The independent validator should check positive resistance and capacity, dimensional consistency, the final temperature offset, and the maximum absolute error against the analytical solution at the requested output samples. Include an invalid-parameter case and a deliberately incorrect model to verify rejection. These values define a proposed test fixture; no simulation results are claimed in this README.
+
+## Evaluation and Acceptance
+
+Create an initial set of **30 reviewed fixtures**: 10 knowledge questions (8 answerable and 2 without supporting evidence), 10 specification cases (5 valid and 5 ambiguous or invalid), and 10 model-generation/simulation cases (6 valid and 4 deliberately faulty). Include missing evidence, ambiguous wording and invalid units. Keep reference answers and assertions versioned separately from prompts. Extend this with dedicated access, timeout and recovery checks.
+
+| Dimension | Proposed acceptance evidence |
+|---|---|
+| Retrieval | At least 7 of the 8 answerable questions retrieve an adjudicated supporting passage in the first five results; both unsupported questions produce an explicit abstention |
+| Specification integrity | Every accepted requirement has an ID, units, constraints and an acceptance test; unresolved cases cannot advance to generation |
+| Model correctness | All approved thermal reference cases satisfy the independent numerical assertions; all deliberately invalid fixtures are rejected |
+| Generation quality | Report first-attempt success and success after at most two repair attempts separately; establish the baseline before setting improvement targets |
+| Traceability | Every accepted artifact links to its input requirement, model revision, toolchain and verification evidence |
+| Isolation | Cross-project retrieval and artifact-access attempts are denied in the access test suite |
+| Recovery | Restarting a workflow preserves evidence and does not duplicate an effective simulation submission |
+| Local operation | After provisioning dependencies and models, the reference workflow completes with external egress disabled |
+| Performance | Record end-to-end latency, model latency, memory use and simulation time on named hardware; publish distributions and workload settings |
+
+These are proposed gates for a future implementation. There is no measured accuracy, performance improvement or cost saving established by this documentation change. Evaluate human review effort alongside model success rates. An LLM evaluator may assist analysis, but the numerical acceptance decision uses executable assertions.
+
+## Deployment Profiles and Delivery Stages
+
+| Profile | Composition | Adoption condition |
+|---|---|---|
+| Local MVP | One API/orchestrator, Ollama, Qdrant, PostgreSQL, a filesystem artifact volume and an isolated OpenModelica worker | Complete the thermal workflow on one controlled host |
+| Shared engineering service | Authenticated UI/API, Keycloak, shared inference such as vLLM, bounded worker concurrency, backups and OpenTelemetry | Demonstrate project isolation, recovery and capacity under the target workload |
+| Research extensions | FMI/FMPy, MBSE transformations, SciML experiments and specialized visualization or acceleration | Add one adapter at a time with an explicit comparison fixture |
+
+Plan the local profile around a Linux container deployment. Separate model inference from compiler/simulation workers, impose CPU/RAM/time limits, and use versioned images and dependency locks. Kubernetes is an option for shared deployment after operational requirements justify it. Local hosting still requires compute, storage and maintenance; benchmark resource use before choosing hardware.
+
+| Stage | Reviewable deliverable | Completion gate |
+|---|---|---|
+| A — Contracts and corpus | Specification schema, model/runtime selection record, permitted corpus, 30 fixtures and dependency inventory | Requirements and independent reference assertions reviewed |
+| B — Retrieval and drafting | Local inference adapter, Qdrant ingestion, cited retrieval and specification validation | Retrieval and specification gates pass |
+| C — Modelica vertical slice | MCP adapters, persistent workflow, isolated worker and thermal low-code form | End-to-end simulation, numerical, isolation and recovery checks pass |
+| D — Reuse and scale | Second engineering scenario, optional FMI adapter and measured shared-service deployment | Same contracts reused; regression and capacity evidence published |
+
+Map stages A–C to the existing specification, AI and model-integration roadmap. Treat stage D as gated follow-on work. The first implementation should include its own build manifests, container definitions and operating instructions; the present repository does not yet provide them.
 
 ---
 
 # AI Agent Architecture
 
-```text
-                 ┌───────────────────┐
-                 │ Engineering User  │
-                 └─────────┬─────────┘
-                           │
-                           ▼
-                 ┌───────────────────┐
-                 │ Engineering Agent │
-                 └─────────┬─────────┘
-                           │
-          ┌────────────────┼────────────────┐
-          ▼                ▼                ▼
-   Specification       Model Agent     Simulation Agent
-      Agent                │                │
-          │                │                │
-          └────────────────┼────────────────┘
-                           ▼
-                     MCP Interface
-                           │
-        ┌──────────────────┼───────────────────┐
-        ▼                  ▼                   ▼
-   Modelica Tools      MBSE Tools         Simulation Tools
-        │                  │                   │
-        └──────────────────┼───────────────────┘
-                           ▼
-                     Validation Layer
+The proposed runtime uses a small orchestration graph with separate retrieval, inference and execution boundaries:
+
+```mermaid
+flowchart TD
+    UI["Engineering workspace"] --> API["API and project access"]
+    API --> WF["LangGraph workflow"]
+    WF <--> KB["RAG and approved sources"]
+    WF <--> LLM["Local model adapter"]
+    WF --> GATE["MCP tool policy"]
+    GATE --> WORKER["Isolated simulation worker"]
+    WORKER --> CHECK["Independent verification"]
+    CHECK --> REVIEW["Engineering review"]
+    CHECK -->|"Diagnostics"| WF
+    REVIEW -->|"Approved"| BUNDLE["Versioned change and evidence"]
+    WF <--> STATE["PostgreSQL run state"]
 ```
+
+A workflow run should follow an explicit state model:
+
+| State | Required action | Next step |
+|---|---|---|
+| Draft | Parse the request, retrieve evidence and identify missing constraints | Clarify unresolved inputs or prepare a specification |
+| Specification review | Review requirements, assumptions and acceptance tests | Generate only from the approved revision |
+| Generate | Produce a schema-valid candidate and a bounded experiment plan | Check the model |
+| Validate | Run compiler checks, simulation and independent assertions | Prepare review evidence or attempt repair |
+| Repair | Use concrete diagnostics to create a candidate patch | Revalidate; stop after at most two repair attempts |
+| Engineering review | Present the diff, source references, failures and numerical evidence | Record approval, rejection or requested changes |
+| Accepted | Store the reviewed revision and complete evidence bundle | Release only through the defined project workflow |
+| Failed or cancelled | Preserve diagnostics and the last stable artifacts | Resume through an explicit new decision |
+
+LangGraph's [persistence](https://docs.langchain.com/oss/python/langgraph/persistence) and [interrupts](https://docs.langchain.com/oss/python/langgraph/interrupts) support stored workflow state and review pauses. Use a persistent checkpointer and an application job ledger. Resumption can replay node code, so side effects require idempotency; checkpointing alone does not guarantee a simulation is submitted exactly once.
+
+Bind each review decision to the exact specification, patch and evidence hashes. Any relevant change invalidates that approval and its downstream validation. A failed repair returns diagnostics to the engineer; it must not relax acceptance thresholds to produce a pass.
 
 ---
 
@@ -570,12 +749,19 @@ The current repository contains a broad technology inventory rather than a conve
 
 | Technology | Purpose | Classification |
 |---|---|---|
+| LangGraph | Proposed bounded workflow and persistent agent state | Core candidate |
+| Ollama / vLLM | Alternative local or shared model-serving backends | Runtime candidates |
+| Qdrant | Proposed retrieval index for approved engineering knowledge | Core candidate |
+| PostgreSQL | Proposed specifications, checkpoints, jobs and traceability store | Core candidate |
+| MCP Python SDK | Proposed typed engineering-tool adapters | Integration candidate |
 | AutoGen Studio | No-code agent development | Optional |
 | Modelica MCP Server | Engineering AI integration | Integration |
 | XCOS-AI | MCP integration for Xcos | Integration |
 | SMArtInt | AI model integration | Research |
 | LLM-based engineering workflows | Specification generation | Core |
 | MCP | Tool interoperability | Core |
+
+The [AI integration proposal](#open-source-ai-integration-proposal) defines the initial selections, source links and validation gates. Alternatives in one row are not cumulative installation requirements.
 
 ---
 
@@ -584,6 +770,8 @@ The current repository contains a broad technology inventory rather than a conve
 | Technology | Purpose | Classification |
 |---|---|---|
 | Modelica | Physical system modeling | Core |
+| OpenModelica + OMPython | Reference compiler and simulation adapter for the proposed MVP | Runtime candidates |
+| FMI / FMPy | Optional FMU exchange and execution boundary | Integration candidate |
 | JModelica | Modelica modeling/simulation | Reference |
 | ModelicaGym | Reinforcement learning + Modelica | Research |
 | ModiGen | LLM-based Modelica generation | Research |
@@ -686,7 +874,7 @@ Dependencies should be maintained according to the following categories.
 | Legacy | Historical compatibility |
 | Deprecated | No longer recommended |
 
-This distinction is important because the repository currently contains a technology ecosystem rather than a single package manifest.
+The suffix **candidate** marks a proposed dependency that has not yet been integrated or validated in JFXLCDP. The classifications above describe intended roles; they do not establish an installed package manifest.
 
 ---
 
@@ -695,15 +883,16 @@ This distinction is important because the repository currently contains a techno
 | Layer | Recommended Technology |
 |---|---|
 | Specification | SDD / SRS |
-| AI | LLM + Agent Framework |
-| Tool Integration | MCP |
+| AI | LangGraph + local model adapter; Ollama initially, vLLM as an alternative |
+| Tool Integration | MCP SDK + schema-validated engineering adapters |
 | MBSE | Capella / Arcadia |
 | Modeling | SysML / Modelica |
 | Modeling Framework | EMF |
-| Simulation | SciML / Modelica |
+| Simulation | OpenModelica + OMPython; optional FMI and SciML adapters |
 | Robotics | Drake |
 | Scientific Computing | Kokkos |
-| Knowledge | OpenKB / KnowRob |
+| Knowledge | Qdrant + approved project corpus; OpenKB / KnowRob as optional extensions |
+| Workflow and Traceability | PostgreSQL |
 | Rules | SWRL |
 | Code Generation | EMF / Ada tooling |
 | UI | Low-Code / Web |
@@ -718,59 +907,19 @@ This distinction is important because the repository currently contains a techno
 
 # Recommended Technology Stack
 
-A practical MVP stack could be:
+Implement the [local MVP profile](#deployment-profiles-and-delivery-stages) first, using the [reference components](#reference-components) and their pinned dependency records.
 
-```text
-Frontend
-    │
-    └── Web / Low-Code UI
-             │
-             ▼
-API / Application Layer
-    │
-    ├── Python
-    ├── FastAPI
-    └── Agent orchestration
-             │
-             ▼
-AI Layer
-    │
-    ├── Local LLM
-    ├── Cloud LLM
-    ├── MCP
-    └── RAG
-             │
-             ▼
-Specification Layer
-    │
-    ├── SDD
-    ├── SRS
-    ├── SysML
-    └── JML
-             │
-             ▼
-MBSE Layer
-    │
-    ├── Capella
-    ├── Arcadia
-    └── EMF
-             │
-             ▼
-Engineering Layer
-    │
-    ├── Modelica
-    ├── SciML
-    ├── Drake
-    └── Kokkos
-             │
-             ▼
-Validation
-    │
-    ├── Simulation
-    ├── Testing
-    ├── Formal Verification
-    └── Requirements Traceability
-```
+| Deployable responsibility | MVP scope |
+|---|---|
+| Application | FastAPI, LangGraph, schema validation, retrieval logic, a local embedding adapter and the thermal parameter/results UI |
+| Generation service | Ollama with one evaluated local model checkpoint |
+| Search index | Qdrant with approved corpus revisions and enforced access filters |
+| Durable state | PostgreSQL for specifications, workflow checkpoints, jobs and traceability |
+| Engineering worker | OpenModelica and OMPython in an isolated execution environment |
+
+A local artifact volume stores source bundles, manifests, diagnostics and result files. The application validates artifact access and verifies checksums. Hosted-model adapters, shared vLLM serving, FMI, MBSE transformation services and scientific-computing extensions follow the same contracts as later additions.
+
+This is an implementation target. [Delivery stages and acceptance gates](#deployment-profiles-and-delivery-stages) determine when each component becomes a supported part of JFXLCDP.
 
 ---
 
@@ -817,6 +966,8 @@ Recommended principles:
 
 # User Guide
 
+This workflow describes the intended user experience. It becomes available as the [AI integration stages](#deployment-profiles-and-delivery-stages) are implemented.
+
 ## Typical Workflow
 
 ### Step 1 — Define a Requirement
@@ -857,6 +1008,8 @@ Validated specifications can be used to generate implementation artifacts.
 # Installation Guide
 
 > **Important:** The repository currently acts primarily as a technology and architecture ecosystem. Exact build dependencies should be defined as individual modules become executable.
+
+At this revision, there is no application package manifest or Dockerfile. The Python, Node.js and Docker examples below are templates for future modules and are usable only after their referenced files and scripts have been added. The [deployment profiles](#deployment-profiles-and-delivery-stages) describe the proposed AI runtime.
 
 ## Requirements
 
@@ -1234,6 +1387,8 @@ Suggested tools:
 - [ ] Specification validation
 - [ ] Specification versioning
 - [ ] Traceability model
+- [ ] Versioned units, constraints and acceptance schema for the thermal reference case
+- [ ] Reviewed corpus and 30-fixture evaluation set
 
 ## Phase 3 — AI Engineering
 
@@ -1242,6 +1397,10 @@ Suggested tools:
 - [ ] Model generation agent
 - [ ] Simulation agent
 - [ ] Verification agent
+- [ ] Local inference adapter and pinned model evaluation
+- [ ] Qdrant retrieval with citations and project access filters
+- [ ] LangGraph checkpoints, bounded repair and revision-bound review decisions
+- [ ] PostgreSQL job ledger and restart/idempotency checks
 
 ## Phase 4 — Model Integration
 
@@ -1250,6 +1409,9 @@ Suggested tools:
 - [ ] EMF integration
 - [ ] Capella integration
 - [ ] Model transformation pipeline
+- [ ] Isolated OpenModelica/OMPython worker and independent thermal assertions
+- [ ] Reviewed requirement-to-model element mappings
+- [ ] Optional FMI 2.0 Co-Simulation adapter with a pinned compatibility fixture
 
 ## Phase 5 — Low-Code Platform
 
@@ -1258,6 +1420,7 @@ Suggested tools:
 - [ ] API generation
 - [ ] Database generation
 - [ ] Automated test generation
+- [ ] Unit-aware parameter form and results dashboard generated from the reviewed schema
 
 ## Phase 6 — Digital Twin
 
